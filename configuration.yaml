@@ -1,0 +1,42 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Sensors
+sensor:  
+  - platform: systemmonitor
+    resources:
+    - type: processor_use
+    - type: disk_use_percent
+      arg: "/"
+    - type: disk_free
+      arg: "/"
+    - type: memory_use_percent
+    - type: network_in
+      arg: eth0
+    - type: throughput_network_in
+      arg: eth0
+    - type: network_out
+      arg: eth0
+    - type: throughput_network_out
+      arg: eth0
+    - type: processor_temperature
+    - type: last_boot
+# OPTIONAL CPU Raspberry Pi Temp
+  - platform: command_line
+    name: CPU Temp
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(2)  }}'
